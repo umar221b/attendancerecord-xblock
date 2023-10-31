@@ -507,7 +507,6 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
 
         _, session_ids = self.get_headers_and_session_ids()
 
-
         session_ids_map = {}
         for session_id in session_ids: # just for efficiency
             session_ids_map[session_id] = 1

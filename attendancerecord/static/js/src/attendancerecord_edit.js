@@ -1,4 +1,4 @@
-function AdvancedRecordEdit(runtime, element) {
+function AttendanceRecordEdit(runtime, element) {
     var self = this;
     var notify;
 
@@ -9,19 +9,18 @@ function AdvancedRecordEdit(runtime, element) {
         $(element).find('.cancel-button', element).bind('click', function() {
             runtime.notify('cancel', {});
         });
-        $(element).find('.save-button', element).bind('click', self.surveySubmitHandler);
+        $(element).find('.save-button', element).bind('click', self.recordSubmitHandler);
     };
 
-    this.surveySubmitHandler = function () {
+    this.recordSubmitHandler = function () {
         // Take all of the fields, serialize them, and pass them to the
         // server for saving.
         var handlerUrl = runtime.handlerUrl(element, 'studio_submit');
         var data = {};
 
-        data['questions'] = $('#advancedsurvey-questions-editor', element).val();
-        data['feedback'] = $('#advancedsurvey-feedback-editor', element).val();
-        data['max_submissions'] = $('#advancedsurvey-max-submissions', element).val();
-        data['block_name'] = $('#advancedsurvey-block-name', element).val();
+        data['sessions'] = $('#attendancerecord-sessions-editor', element).val();
+        data['options'] = $('#attendancerecord-options-editor', element).val();
+        data['block_name'] = $('#attendancerecord-block-name', element).val();
 
         if (notify) {
             runtime.notify('save', {state: 'start', message: gettext("Saving")});
