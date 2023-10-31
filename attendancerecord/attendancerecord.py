@@ -390,7 +390,6 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
         Checks to see if the user has permissions to view all session records.
         This only works inside the LMS.
         """
-        return True # TODO: testing
         if not hasattr(self.runtime, 'user_is_staff'):
             return False
 
