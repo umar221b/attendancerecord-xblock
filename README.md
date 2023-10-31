@@ -14,11 +14,6 @@ The module supports up to 3 levels of nesting. The last level will contain the I
         ["sun", "Sunday"],
         ["mon", "Monday"],
         ["wed", "Wednesday"]
-    ],
-    "options": [
-        ["not-recorded", "Not recorded"],
-        ["attended", "attended"],
-        ["absent", "absent"]
     ]
 }
 ```
@@ -35,13 +30,7 @@ The module supports up to 3 levels of nesting. The last level will contain the I
             ["week2-sun", "Sunday"],
             ["week2-wed", "Wednesday"]
         ],
-    },
-    "options": [
-        ["not-recorded", "Not recorded"],
-        ["attended", "attended"],
-        ["late", "late"],
-        ["absent", "absent"]
-    ]
+    }
 }
 ```
 
@@ -69,14 +58,19 @@ The module supports up to 3 levels of nesting. The last level will contain the I
                 ["week2-wed-evening", "Evening Session"]
             ]
         }
-    },
-    "options": [
-        ["not-recorded", "Not recorded"],
-        ["attended", "attended"],
-        ["late", "late"],
-        ["absent", "absent"]
-    ]
+    }
 }
+```
+
+Attendance options are specified in a different field but in a similar manner:
+
+```json
+[
+    ["not-recorded", "Not recorded"],
+    ["attended", "attended"],
+    ["late", "late"],
+    ["absent", "absent"]
+]
 ```
 
 # Support
