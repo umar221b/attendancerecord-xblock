@@ -314,9 +314,9 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
             ["attended", "Attended"],
             ["late", "Late"],
             ["absent", "Absent"]
-        ], scope=Scope.settings, help=_("Options to choose from for each student")
+        ], scope=Scope.settings, help=_("Options to choose from for each learner")
     )
-    records = Dict(help=_("All students' records"), scope=Scope.user_state_summary, default={"student_1": { "week1-sun-morning": "attended", "week2-sun-afternoon": "late", "week2-wed-afternoon": "absent" }})
+    records = Dict(help=_("All learner' records"), scope=Scope.user_state_summary, default={"student_1": { "week1-sun-morning": "attended", "week2-sun-afternoon": "late", "week2-wed-afternoon": "absent" }})
 
     
     def get_headers_and_session_ids(self):
@@ -373,7 +373,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
     def get_current_user_id(self):
         return self.runtime.user_id
 
-    def get_student_records(self):
+    def get_learner_records(self):
         if self.can_view_records():
             return self.records
         else:
@@ -422,7 +422,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
 
     def student_view(self, context=None):
         """
-        The primary view of the AttendanceRecordXBlock, shown to students
+        The primary view of the AttendanceRecordXBlock, shown to learners
         when viewing courses.
         """
         if not context:
@@ -445,7 +445,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
             'sessions': self.sessions,
             'session_ids': session_ids,
             'options': self.options,
-            'records': self.get_student_records(),
+            'records': self.get_learner_records(),
             'learners': learners,
             'block_id': self._get_block_id(),
             'usage_id': six.text_type(self.scope_ids.usage_id),
@@ -489,12 +489,12 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
 
         if not self.options:
             result['success'] = False
-            result['errors'].append(self.ugettext("You must have at least one option to be able to save the student records."))
+            result['errors'].append(self.ugettext("You must have at least one option to be able to save the learner records."))
             return result
 
         if not new_records:
             result['success'] = False
-            result['errors'].append(self.ugettext("You must submit values for the student records."))
+            result['errors'].append(self.ugettext("You must submit values for the learner records."))
             return result
 
         if not self.can_submit():
@@ -576,7 +576,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
                     student_records = self.records.get(enrollment['user_id'], {})
                     if session_id in student_records:
                         row.append(options_map[session_id])
-                data[sm.student.id] = row
+                data[enrollment['user_id']] = row
         return header_row + list(data.values())
 
     def get_filename(self):
