@@ -1,0 +1,31 @@
+/* CSS for AttendanceRecordXBlock Studio Menu View */
+
+.editor-container {
+    width: 100%;
+    text-align: center;
+}
+
+.editor {
+    width: 98%;
+    height: 7em;
+    text-align: left;
+    color: #4C4C4C;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    box-shadow: 0 0 9px #555 inset;
+    border: 1px solid #B2B2B2;
+    border-radius: 3px;
+    padding: 10px;
+}
+
+#attendancerecord-sessions-editor {
+    height: 14em;
+}
+
+#attendancerecord-options-editor {
+    height: 14em;
+}
+
+.attendancerecord-setting-label {
+    text-transform: capitalize;
+}

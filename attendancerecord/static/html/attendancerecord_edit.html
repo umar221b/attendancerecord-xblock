@@ -1,0 +1,57 @@
+{% load i18n %}
+{{js_template|safe}}
+<div class="wrapper-comp-settings is-active editor-with-buttons" id="settings-tab">
+    <form id="attendancerecord-form">
+    <ul class="list-input settings-list" id="attendancerecord-line-items">
+        <li class="field comp-setting-entry is-set">
+            <div class="wrapper-comp-setting">
+                <label class="label setting-label attendancerecord-setting-label" for="attendancerecord-block-name">{% trans 'Display Name' %}</label>
+                <input class="input setting-input" name="block_name" id="attendancerecord-block-name" value="{{ block_name }}" type="text" />
+            </div>
+        </li>
+        <li class="field comp-setting-entry is-set">
+            <h2><label for="attendancerecord-sessions-editor">{% trans 'Sessions' %}</label></h2>
+            <div id="attendancerecord-sessions-editor-container" class="editor-container">
+                <textarea class="input setting-input editor" name="sessions" id="attendancerecord-sessions-editor"
+                          aria-describedby="attendancerecord-sessions-editor-help">{{sessions}}</textarea>
+            </div>
+            <span class="tip setting-help" id="attendancerecord-sessions-editor-help">
+                {% trans 'Uses a specific formatting. Check example to know the supported keys.' %}
+            </span>
+        </li>
+        <li class="field comp-setting-entry is-set">
+            <h2><label for="attendancerecord-options-editor">{% trans 'Options' %}</label></h2>
+            <div id="attendancerecord-options-editor-container" class="editor-container">
+                <textarea class="input setting-input editor" name="options" id="attendancerecord-options-editor"
+                          aria-describedby="attendancerecord-options-editor-help">{{options}}</textarea>
+            </div>
+            <span class="tip setting-help" id="attendancerecord-options-editor-help">
+                {% trans 'Uses a specific formatting. Check example to know the supported keys.' %}
+            </span>
+        </li>
+        <li class="field comp-setting-entry is-set">
+            <p><strong>{% trans 'Notes:' %}</strong></p>
+            <p>
+                {% blocktrans %}
+                    If you change sessions, students records for the removed sessions will be lost. New sessions will not have any values for students initially but will get the value of the first option after the first save subsequent to the change.
+                {% endblocktrans %}
+            </p>
+            <p>
+                {% blocktrans %}
+                    If you change options, students records for the removed options will be removed. After the first subsequent save, they will get the value of the first option.
+                {% endblocktrans %}
+            </p>
+        </li>
+    </ul>
+    <div class="xblock-actions">
+        <ul>
+            <li class="action-item">
+                <input id="attendancerecord-submit-options" type="button" class="button action-primary save-button" value="{% trans 'Save' %}" />
+            </li>
+            <li class="action-item">
+                <a href="#" class="button cancel-button">{% trans 'Cancel' %}</a>
+            </li>
+        </ul>
+    </div>
+    </form>
+</div>

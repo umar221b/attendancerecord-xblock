@@ -1,0 +1,104 @@
+/* CSS for AttendanceRecordXBlock */
+
+.attendancerecord_block table, .attendancerecord_block th, .attendancerecord_block td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.attendancerecord_block .table-container {
+    overflow-x: scroll;
+}
+
+.attendancerecord_block .submit-container {
+    margin-top: 1rem;
+}
+
+.butn {
+    padding: 0.5rem;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    text-transform: none;
+}
+
+.attendancerecord_block .submit-container .butn {
+    color: #fff;
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.attendancerecord_block .submit-container .butn:hover {
+    color: #fff;
+    background-color: #157347;
+    border-color: #146c43;
+}
+
+.export-results-button-wrapper {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.export-results-button-wrapper .butn {
+    color: #fff;
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.export-results-button-wrapper .butn:hover {
+    color: #fff;
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.attendancerecord_block select {
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    -moz-padding-start: calc(0.75rem - 3px);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    word-wrap: normal;
+    text-transform: none;
+}
+
+.attendancerecord_block td, .attendancerecord_block th {
+    padding: 16px;
+}
+
+.attendancerecord-hidden {
+    display: none;
+}
+
+.attendancerecord_block .attendancerecord-header {
+    text-transform: uppercase;
+}
+
+.attendancerecord_block #submit-feedback {
+    margin-top: 1rem;
+}

@@ -1,0 +1,105 @@
+{% load i18n %}
+{{ js_template|safe }}
+<div class="attendancerecord_block" data-can-submit="{% if can_submit %}1{% endif %}">
+    <h3 class="attendancerecord-header">{{block_name}}</h3>
+    <form id="{{block_id}}-{{usage_id}}">
+        <div class="table-container">
+            <table>
+                <thead>
+                    {% if sessions.nesting == 1 %}
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            {% for session in sessions.sessions %}
+                                <th>{{session|element_at_index:1}}</th>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                    {% if sessions.nesting == 2 %}
+                        <tr>
+                            <th colspan="2">User Info</th>
+                            {% for key, sessions in sessions.sessions|iterate_dict %}
+                                {% with span=sessions|count_recursive %}
+                                    <th colspan="{{span}}">{{key}}</th>
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            {% for key, sessions in sessions.sessions|iterate_dict %}
+                                {% for session in sessions %}
+                                    <th>{{session|element_at_index:1}}</th>
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                    {% if sessions.nesting == 3 %}
+                        <tr>
+                            <th colspan="2" rowspan="2">User Info</th>
+                            {% for key, session_groups in sessions.sessions|iterate_dict %}
+                                {% with span=session_groups|count_recursive %}
+                                    <th colspan="{{span}}">{{key}}</th>
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            {% for key, session_groups in sessions.sessions|iterate_dict %}
+                                {% for key2, sessions in session_groups|iterate_dict %}
+                                    {% with span=sessions|count_recursive %}
+                                        <th colspan="{{span}}">{{key2}}</th>
+                                    {% endwith %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            {% for key, session_groups in sessions.sessions|iterate_dict %}
+                                {% for key2, sessions in session_groups|iterate_dict %}
+                                    {% for session in sessions %}
+                                        <th>{{session|element_at_index:1}}</th>
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% for learner in learners %}
+                        <td>{{learner.full_name}}</td>
+                        <td>{{learner.user_email}}</td>
+                        {% for session_id in session_ids %}
+                            {% with r_id=''|add_str:learner.user_id|add_str:'##'|add_str:session_id %}
+                                <td>
+                                    <select id="{{r_id}}" name="{{r_id}}">
+                                        {% for option in options %}
+                                            <option value="{{option|element_at_index:0}}" {% if records|get_item:learner.user_id|get_item:session_id == option|element_at_index:0 %} selected {% endif %}>{{option|element_at_index:1}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                            {% endwith %}
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="submit-container">
+            {% if can_view_records and not studio_edit %}
+                <input class="butn" type="button" name="submit" value="{% trans 'Save' %}"/>
+            {% elif studio_edit %}
+                <p>{% trans "The Save button will appear here in the LMS." %}</p>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% if can_view_records and not studio_edit %}
+<hr/>
+<div class="export-results-button-wrapper">
+    <button class="export-results-button butn">{% trans "Export results to CSV" %}</button>
+    <button disabled class="download-results-button butn">{% trans "Download CSV" %}</button>
+    <p class="error-message attendancerecord-hidden"></p>
+</div>
+{% elif studio_edit %}
+<p>{% trans "Student data and results CSV will be available in the LMS." %}</p>
+{% endif %}
