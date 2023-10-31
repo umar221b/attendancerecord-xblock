@@ -171,7 +171,7 @@ class CSVExportMixin(object):
         raise NotImplementedError
 
 class EnrollmentMixin(object):
-    def _get_enrollments(course_id, track=None, cohort=None, active_only=False, excluded_course_roles=None, user_ids=None):
+    def _get_enrollments(self, course_id=None, track=None, cohort=None, active_only=False, excluded_course_roles=None, user_ids=None):
         try:
             from django.apps import apps   # pylint: disable=import-error
             from django.db.models import Exists, OuterRef   # pylint: disable=import-error
@@ -194,10 +194,10 @@ class EnrollmentMixin(object):
             'course_id': course_id
         }
         if user_ids:
-            filters['student_id__in'] = user_ids
+            filters['user_id__in'] = user_ids
 
         enrollments = apps.get_model('student', 'CourseEnrollment').objects.filter(**filters).select_related(
-            'user').prefetch_related('programcourseenrollment_set')
+            'user')
         if track:
             enrollments = enrollments.filter(mode=track)
         if cohort:
@@ -231,7 +231,7 @@ class EnrollmentMixin(object):
 
             yield enrollment_dict
 
-    def get_enrollments(self, course_key, track=None, cohort=None, user_ids=[]):
+    def get_enrollments(self, course_key=None, track=None, cohort=None, user_ids=[]):
         try:
             from openedx.core.djangoapps.course_groups.cohorts import get_cohort   # pylint: disable=import-error
         except ModuleNotFoundError:
@@ -250,13 +250,13 @@ class EnrollmentMixin(object):
         """
         Return iterator of user dicts
         """
-        enrollments = _get_enrollments(course_key,track=track, cohort=cohort, excluded_course_roles=[], user_ids=user_ids)
+        enrollments = self._get_enrollments(course_id=course_key, track=track, cohort=cohort, excluded_course_roles=[], user_ids=user_ids)
         for enrollment in enrollments:
             cohort = get_cohort(enrollment['user'], course_key, assign=False)
             user_info = {
                 'user_id': enrollment['user_id'],
                 'username': enrollment['username'],
-                'user_email': enrollment['email'],
+                'user_email': enrollment['user_email'],
                 'full_name': enrollment['full_name'],
                 'enrolled': enrollment['enrolled'],
                 'track': enrollment['track'],
@@ -377,7 +377,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
         if self.can_view_records():
             return self.records
         else:
-            return { f"{str(self.runtime.user_id)}": self.records[str(self.runtime.user_id)] }
+            return { f"{str(self.runtime.user_id)}": self.records.get(str(self.runtime.user_id), {}) }
 
     def can_submit(self):
         """
@@ -432,18 +432,19 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
         course_key = getattr(self.scope_ids.usage_id, 'course_key', None)
         
         if self.can_submit():
-            enrollments = self.get_enrollments(course_key)
+            enrollments = self.get_enrollments(course_key=course_key)
         else:
-            enrollments = self.get_enrollments(course_key, user_ids=[self.runtime.user_id])
+            enrollments = self.get_enrollments(course_key=course_key, user_ids=[self.runtime.user_id])
 
         learners = []
         for learner in enrollments:
             learners.append(learner)
-
+        
         context.update({
             'sessions': self.sessions,
             'session_ids': session_ids,
             'options': self.options,
+            'options_map': dict(self.options),
             'records': self.get_learner_records(),
             'learners': learners,
             'block_id': self._get_block_id(),
@@ -525,7 +526,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
 
         # Record the submission!
         self.records = clean_records
-        self.send_submit_event({'records': self.records})
+        self.send_submit_event({'records': self.records, 'grader_id': self.get_current_user_id()})
 
         return result
 
@@ -562,7 +563,7 @@ class AttendanceRecordXBlock(XBlock, ResourceMixin, PublishEventMixin, CSVExport
         data = {}
         options_map = dict(self.options)
         course_key = getattr(self.scope_ids.usage_id, 'course_key', None)
-        enrollments = self.get_enrollments(course_key)
+        enrollments = self.get_enrollments(course_key=course_key)
         for enrollment in enrollments:
             state = json.loads(sm.state)
             if enrollment['user_id'] not in data:

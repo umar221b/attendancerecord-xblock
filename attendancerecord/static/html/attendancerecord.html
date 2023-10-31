@@ -67,19 +67,31 @@
                 </thead>
                 <tbody>
                     {% for learner in learners %}
-                        <td>{{learner.full_name}}</td>
-                        <td>{{learner.user_email}}</td>
-                        {% for session_id in session_ids %}
-                            {% with r_id=''|add_str:learner.user_id|add_str:'##'|add_str:session_id %}
-                                <td>
-                                    <select id="{{r_id}}" name="{{r_id}}">
-                                        {% for option in options %}
-                                            <option value="{{option|element_at_index:0}}" {% if records|get_item:learner.user_id|get_item:session_id == option|element_at_index:0 %} selected {% endif %}>{{option|element_at_index:1}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                            {% endwith %}
-                        {% endfor %}
+                        <tr>
+                            <td>{{learner.full_name}}</td>
+                            <td>{{learner.user_email}}</td>
+                            {% for session_id in session_ids %}
+                                {% with r_id=''|add_str:learner.user_id|add_str:'##'|add_str:session_id %}
+                                    <td class="option">
+                                        {% if can_view_records %}
+                                            <select id="{{r_id}}" name="{{r_id}}" {% if studio_edit %} disabled {% endif %}>
+                                                {% for option in options %}
+                                                    <option value="{{option|element_at_index:0}}" {% if records|get_dict_safe:learner.user_id|get_item:session_id == option|element_at_index:0 %} selected {% endif %}>{{option|element_at_index:1}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        {% else %}
+                                            {% with option_id=records|get_dict_safe:learner.user_id|get_item:session_id %}
+                                                {% if options_map|get_item:option_id is None %}
+                                                    <p>{{options|element_at_index:0|element_at_index:1}}</p>
+                                                {% else %}
+                                                    <p>{{options_map|get_item:option_id}}</p>
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    </td>
+                                {% endwith %}
+                            {% endfor %}
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>

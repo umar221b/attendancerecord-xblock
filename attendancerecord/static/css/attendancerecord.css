@@ -64,6 +64,7 @@
 }
 
 .attendancerecord_block select {
+    min-width: 8rem;
     display: block;
     width: 100%;
     padding: .375rem 2.25rem .375rem .75rem;
@@ -85,6 +86,10 @@
     appearance: none;
     word-wrap: normal;
     text-transform: none;
+}
+
+.attendancerecord_block td.option {
+    text-align: center;
 }
 
 .attendancerecord_block td, .attendancerecord_block th {
